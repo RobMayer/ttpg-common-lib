@@ -17,6 +17,11 @@ namespace Storage {
     };
 
     export const get = <T extends Tokenizable>(obj: GameObject | GameWorld, id: StorageId) => {
+        /**
+         * Loads and deserializes the Tokenizable object from storage.
+         *
+         * @returns {T | undefined} The loaded Tokenizable object, or undefined if the data is not present on the GameObject/GameWorld
+         */
         const load = () => {
             try {
                 const raw = obj.getSavedData(id);
@@ -36,6 +41,14 @@ namespace Storage {
             } catch (e) {}
         };
 
+        /**
+         * Saves a Tokenizable object to storage with an optional version string.
+         *
+         * @template T - The type of the Tokenizable object.
+         * @param {T} data - The Tokenizable object to be saved.
+         * @param {string | undefined} version - Optional version string associated with the data.
+         * @returns {boolean} True if the data was successfully saved, false otherwise.
+         */
         const save = (data: T, version?: string) => {
             const raw = JSON.stringify(data);
             if (raw.length > 1000 * 60) {
@@ -58,6 +71,11 @@ namespace Storage {
             return true;
         };
 
+        /**
+         * Retrieves metadata about the saved data associated with the provided StorageId.
+         *
+         * @returns {Metadata} An object containing metadata information (version, chunks, size).
+         */
         const metadata = (): Metadata => {
             const metaRaw = obj.getSavedData(id);
             if (metaRaw === "") {
