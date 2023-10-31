@@ -16,7 +16,13 @@ namespace Storage {
         size: number;
     };
 
-    export const get = <T extends Tokenizable>(obj: GameObject | GameWorld, id: StorageId) => {
+    export type Store<T extends Tokenizable> = {
+        load: () => undefined | T;
+        save: (data: T, version?: string) => boolean;
+        metadata: () => Metadata;
+    };
+
+    export const get = <T extends Tokenizable>(obj: GameObject | GameWorld, id: StorageId): Store<T> => {
         /**
          * Loads and deserializes the Tokenizable object from storage.
          *

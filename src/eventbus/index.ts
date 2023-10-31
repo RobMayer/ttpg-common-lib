@@ -9,7 +9,14 @@ namespace EventBus {
 
     type Handler<A extends any[]> = (...vargs: A) => void;
 
-    class Bus<const D extends Schema> {
+    export interface Bus<D extends Schema> {
+        subscribe<const S extends keyof D>(signal: S, handler: Handler<D[S]>): () => void;
+        unsubscribe<const S extends keyof D>(signal: S, handler: Handler<D[S]>): void;
+        trigger<const S extends keyof D>(signal: S, ...args: D[S]): void;
+        clear<const S extends keyof D>(signal: S): void;
+    }
+
+    class BusHolder<const D extends Schema> {
         #listeners: { [key in keyof D]?: Handler<D[key]>[] };
 
         constructor() {
@@ -78,12 +85,12 @@ namespace EventBus {
      * @returns {Bus<Schema>} The Bus instance associated with the provided busId.
      */
     export const get = <const T extends Schema>(busId: BusId): Bus<T> => {
-        const busCarriers = globalEvents as typeof globalEvents & { eventBus: { [key: BusId]: Bus<any> } };
+        const busCarriers = globalEvents as typeof globalEvents & { eventBus: { [key: BusId]: BusHolder<any> } };
         if (!("eventBus" in globalEvents)) {
             busCarriers.eventBus = {};
         }
         if (!(busId in busCarriers.eventBus)) {
-            busCarriers.eventBus[busId] = new Bus<T>();
+            busCarriers.eventBus[busId] = new BusHolder<T>();
         }
         return busCarriers.eventBus[busId];
     };
