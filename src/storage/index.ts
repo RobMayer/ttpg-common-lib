@@ -67,12 +67,11 @@ namespace Storage {
             } else {
                 const chunks = chunkString(raw, 1000);
                 obj.setSavedData(JSON.stringify({ v: version, c: chunks.length, s: raw.length }), id);
-                Array(60)
-                    .fill("")
-                    .splice(0, chunks.length, ...chunks)
-                    .forEach((chunk, i) => {
-                        obj.setSavedData(chunk, `${id}[${i}]`);
-                    });
+                const toSave = Array(60).fill("");
+                toSave.splice(0, chunks.length, ...chunks);
+                toSave.forEach((chunk, i) => {
+                    obj.setSavedData(chunk, `${id}[${i}]`);
+                });
             }
             return true;
         };
