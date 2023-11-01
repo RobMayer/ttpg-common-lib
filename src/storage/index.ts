@@ -7,7 +7,7 @@ const chunkString = (str: string, size: number) => {
 };
 
 namespace Storage {
-    export type Tokenizable = string | number | boolean | null | { [key: string | number]: Tokenizable } | Tokenizable[];
+    export type Tokenizable = string | number | boolean | null | { [key: string | number]: Tokenizable } | Tokenizable[] | keyof any[] | readonly Tokenizable[];
 
     export type StorageId = `@${string}/${string}`;
     export type Metadata = {
