@@ -1,4 +1,4 @@
-import { GameObject, GameWorld, JSConsole } from "@tabletop-playground/api";
+import { GameWorld, JSConsole, StaticObject } from "@tabletop-playground/api";
 
 const chunkString = (str: string, size: number) => {
     return Array(Math.ceil(str.length / size))
@@ -22,7 +22,7 @@ namespace Storage {
         metadata: () => Metadata;
     };
 
-    export const get = <T extends Tokenizable>(obj: GameObject | GameWorld, id: StorageId): Store<T> => {
+    export const get = <T extends Tokenizable>(obj: GameWorld | StaticObject, id: StorageId): Store<T> => {
         /**
          * Loads and deserializes the Tokenizable object from storage.
          *
